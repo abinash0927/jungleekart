@@ -1,0 +1,49 @@
+
+{% extends 'homepage.html' %}
+{% block signup %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'EcommerceCss.css' %}">
+<body style="background: url({% static 'static_images/bg_signup1.jpg' %});background-repeat: no-repeat;
+    background-size:cover;">
+{% block login %}
+
+    <div class="container">
+        <h2 class="brand">JungleeKart</h2>
+        {% if messages %}
+        {% for message in messages %}
+        <p class="banner">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        <div class="form-wrapper">
+            <form class="form" method="post">
+                {% csrf_token %}
+                <label>User Name</label>
+                <input class="input-field" name="username" type="text" placeholder="enter user name"required>
+                <label>E-mail</label>
+                <input class="input-field" name="email" type="email" placeholder="enter your e-mail"required>
+                <label>Password</label>
+                <input class="input-field" name="password" type="password" placeholder="enter your password"required>
+                <label>Confirm Password</label>
+                <input class="input-field" name="confirm_password" type="password" placeholder="renter your password"required>
+                <input class="input-field signup" type="submit" value="SIGN-UP">
+                <div style="height:7px;"></div>
+            </form>
+            <div class="social-icons">
+                <div style="width: 100%;height: 5px; border-bottom: 1px solid black; display: flex; align-items:center;justify-content: center; text-align: center;">
+                 <span style="font-size: 20px; background-color: aliceblue; padding: 5px;">or</span>
+                </div>
+                 <div class="icons_sign">
+                    <button class="google"><i class="fa-brands fa-google"></i></button>
+                    <button class="google"><i class="fa-solid fa-envelope"></i></button>
+                 </div>
+             </div>
+        </div>
+        <p class="para-1">already have an account? <a href="{% url 'signin' %}" style="text-decoration: none;">sign-in</a></p>
+    </div>
+    {% endblock %}
+    <script src="{% static 'Homepage.js' %}">
+        {{custom.popup}}
+    </script>
+</body>
+{% endblock %}
+

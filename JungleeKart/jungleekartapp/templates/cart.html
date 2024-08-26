@@ -1,0 +1,51 @@
+
+{% extends 'homepage.html' %}
+{% block content %}
+    <div class="cart">
+        <ul class="cart_lis">
+            {% for item in items %}
+            <li>
+                <div class="div_but">
+                    <div class="quantity">
+                        <span class="action material-symbols-outlined" data-action="remove"  data-product={{item.product_id.id}}  style="font-size: 16px;align-self: start;margin-left: -2px;">
+                            remove</span>
+                        <span>{{item.quantity|default:1}}</span>
+                        <span data-action="add" data-product={{item.product_id.id}} class="action material-symbols-outlined" style="font-size: 16px;    align-self: start;margin-left: -2px;">
+                            add</span>
+                    </div>
+                    <span data-action="delete" data-product={{item.product_id.id}} class="action material-symbols-outlined" style="font-size: 30px;">
+                        delete</span>
+                </div>
+                    <img src={{item.product_id.main_image.url}} alt="">
+                    <h3 id="hed">{{item.product_id.name}}</h3>
+                    <p>{{item.product_id.desc|truncatewords:5}}</p>
+                    <p>&#x20B9; {{item.product_id.price}}</p>
+                    <button type="button" id="b1" >buy now</button>
+                    <button type="button" id="b2">go to</button>
+            </li>
+            {% endfor %}
+        </ul>
+        <hr style="height:5px;">
+        <div class="total">
+            <h2 style="padding:0;">Price Details</h2>
+                <div class="subtot">
+                    <ul>
+                        <li>Price</li>
+                        <li>Items</li>
+                        <li>Discount</li>
+                        <li>Delivery Charges</li>
+                        <li>Total Amount</li>
+                    </ul>
+                    <ul>
+                        <li>&#x20B9; {{details.total_price}}</li>
+                        <li> {{details.total_items}}</li>
+                        <li>&#8208;&#x20B9; {{details.discount_price}}</li>
+                        <li>&#x20B9; 50</li>
+                        <li>&#x20B9; {{details.total_amount}}</li>
+                    </ul>
+                </div>
+                <button>place order</button>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
+<title>Jungleekart</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="{% static 'homepage.css' %}">
+<script>
+    var user = "{{request.user}}";
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+</script>
+</head>
+{% block signup %}
+    <body>
+    <div class="navba">
+        <a class="nav-bran" href="{% url 'home' %}"><img src="{% static 'static_images/presplash.png' %}" alt="Logo" width="40" height="40" class="d-inline-block align-text-top rounded-pill" style="margin: 2px;"></a><a href=""></a>
+        <ul class="navbar-na" id="navbarul">
+            <li class="nav-ite"><a href="{% url 'home' %}" class="nav-link active">Home</a></li>
+            <li class="nav-ite"><a href="" class="nav-link active">Products</a></li>
+            <li class="nav-ite"><a href="" class="nav-link active">About</a></li>
+            <li class="nav-ite"><a href="" class="nav-link active">Contact</a></li>
+            <li>
+                <div class="searchfield">
+                     <form action="{% url 'products' %}" method="get">
+                        <input type="text" name="search" placeholder="search here" required>
+                        <input type="submit" class="btn" value="search">
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <div>
+            <a class="icons menu" onclick="MenuFunc()"><i class="fa-solid fa-bars fa-close"></i></a>
+            <a class="icons" href='{% url "account" %}'><i class="fa-solid fa-user"></i></a>
+            <a class="icons" href='{% url "cart" %}'><i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+    </div>
+{% block content %}
+    <div class="home" style="background: url({% static 'static_images/gpe.png' %});background-repeat: no-repeat;
+    background-size: contain ;background-position: center 40px;background-color: #d3f2f8;">
+        <div class="home-bg">
+        <div class="home-text">
+            <h4>Find the Best</h4>
+            <h1>Exclusive offers</h1>
+            <a href="{% url 'products' %}" class="btn1">explore now</a>
+        </div>
+    </div>
+    </div>
+        <div id="demo" class="container-fluid carousel slide mt-2 mb-2 pt-5" data-bs-ride="carousel" style="background-color: rgb(255, 189, 91);">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#deno" data-bs-slide-to="3"></button>
+            </div>
+            <div class="carousel-inner">
+
+                {% for product in products %}
+                    {% if forloop.first %}
+                        <div class="carousel-item active"><a><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px darkgray;">{{product.name}}<p >{{product.desc}}</p></h2></div></a></div>
+                   
+                {% else %}
+                <div class="carousel-item"><a><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px gray;">{{product.name}}<p>{{product.desc}}</p></h2></div></a></div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev" ><span class="carousel-control-prev-icon" style="background-color: gray;" ></span></button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next" ><span class="carousel-control-next-icon" style="background-color: gray;"></span></button>
+        </div>
+    <section class="feature mb-2">
+        <div class="middle-text">
+            <h2 class="anim">Discover more</h2>
+            <span class="anim">Good things.</span>
+        </div>
+            <div class="content">
+                {% for category in categories %}
+
+                <div id="row" class="row row1">
+                    <div class="main">
+                        <div class="roe-text">
+                            <h6>
+                                Explore new arrivals
+                            </h6>
+                            <h5>{{category.category_name}}</h5>
+                            <a href="#" class="row-btn">
+                                show me all
+                            </a>
+                        </div>
+                        <div class="row-img">
+                            <img src="{{category.category_image}}" style="min-height: 130px;width: 330px;margin-left: 10px; object-fit: scale-down;" class="img1">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
+    </section>
+
+    <section class="product">
+        <div class="middle-text">
+            <h2 class="anim" >Check Out</h2>
+            <span class="anim">Best selling of the season</span>
+        </div>
+        <div class="product-content">
+            {% for best in selling %}
+            <div class="box">
+                <div class="box-img">
+                    <img src="{{best.main_image}}" class="bx">
+                    <p>{{best.name}}</p>
+                    <!-- <h6> Brand : {{best.brand}}</h6> -->
+                    <div class="inbox">
+                        <div>
+                            <a href="#" class="price">Rs. {{best.price}}</a>
+                        </div>
+                        <div class="rating">
+                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+{% endblock %}
+
+    <footer>
+        <div class="container-fluid mt-2 pt-3">
+            <ul>
+                <li><a href=""><i class="fa-brands fa-square-instagram"></i> Instagram</a></li>
+                <li><a href=""><i class="fa-brands fa-square-facebook"></i> facebook</a></li>
+                <li><a href=""><i class="fa-brands fa-square-twitter"></i> twitter</a></li>
+            </ul>
+            <ul>
+                <li><a href="">partnership</a></li>
+                <li><a href="">support & services</a></li>
+                <li><a href="" style="text-wrap: wrap;">privacy & policy</a></li>
+            </ul>
+            <ul>
+                <li><a href="">payments</a></li>
+                <li><a href="">feedback & report</a></li>
+                <li><a href="">cancellation & returns</a></li>
+            </ul>
+        </div>
+        <hr style="color: rgb(255, 255, 255);">
+        <span style="color: white;">copyright &copy; 2024</span>
+        <br>
+    </footer>
+    <script src="{% static 'Homepage.js' %}">
+    </script>
+</body>
+{% endblock %}
+
+</html>
