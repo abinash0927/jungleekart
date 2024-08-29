@@ -399,6 +399,9 @@ header.sticky{
     font-size: 15px;
     text-wrap: nowrap;
 }
+.rating{
+    color: rgb(71, 144, 222);
+}
 footer{
 
     background-color: #1c1c1c;
@@ -841,10 +844,16 @@ footer span{
 #prev,#next{
     position: absolute;
     /* display: inline; */
+    font-size: 30px;
     top: 30%;
+    margin: 5px;
+    border-radius: 5px;
 }
 #next{
     right: 0;
+}
+#prev:hover,#next:hover{
+    box-shadow:0px 0px 4px 2px rgb(240, 128, 236);
 }
 @keyframes op{
     0%{
@@ -877,15 +886,18 @@ footer span{
 }
 .all_d{
     margin: 5px;
+    height: 100vh;
+
 }
 .sb_h{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 }
 .sub_all_d{
     margin: 5px;
-    border:1px solid black;
+    /* border:1px solid black; */
     border-bottom:none;
     display: block;
 
@@ -894,7 +906,7 @@ footer span{
 .sub_all_d ul{
     display: flex;
     justify-content: space-between;
-    border-bottom:1px solid black;
+    border:1px solid black;
     padding: 5px;
 
 }
@@ -904,6 +916,7 @@ footer span{
     bottom: 0;
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     background-color: rgb(248, 248, 248);
     box-shadow:1px -2px 4px gray;
     border-radius: 5px;
@@ -911,7 +924,9 @@ footer span{
 .pro_but .butt{
     flex:1 30px;
     border-radius: 10px;
+    margin: 10px;
     font-size: 15px;
+    height: 40px;
     color: white;
     background-color: #000000
 }

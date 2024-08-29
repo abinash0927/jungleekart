@@ -1,0 +1,53 @@
+{% extends 'homepage.html' %}
+<link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block content %}
+    <div class="slider" style="background-color: black;">
+        <ul>
+            {% if prods.main_image %}<li class="myslides active"><img src="{{prods.main_image.url}}" alt=""></li>{% endif %}
+            <li class="myslides"><video src="sampleimages/0001-0400.mp4" alt="" style="height: 250px;width: 250px;" controls autoplay></video></li>
+            <li class="myslides"><img src="sampleimages/football.png" alt=""></li>
+            <li class="myslides"><img src="sampleimages/dress.png" alt=""></li>
+            <li class="myslides"><img src="sampleimages/toys.jpeg" alt=""></li>
+        </ul>
+        <div class="slider_indicator">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <button id="prev">&lt;</button>
+        <button id="next">&gt;</button>
+    </div>
+    <hr>
+    <div class="s_d">
+        <h4>{{prods.name}}</h4>
+        <p>{{prods.desc}}</p>
+        <p>&#x20B9; {{prods.price}}</p>
+    </div>
+    <hr>
+    <div class="all_d">
+        <div class="sb_h">
+            <h4>All Details</h4>
+            <i class="material-symbols-outlined ex">expand_more</i>
+        </div>
+        <div class="sub_all_d">
+            <ul><li>Brand</li> <li>{{prods.brand}}</li></ul>
+            <ul><li>Model Number</li> <li>R100</li></ul>
+            <ul><li>Model Name</li> <li>EOS</li></ul>
+            <ul><li>SLR Variant</li> <li>RF-s 18-45mm </li></ul>
+            <ul><li>Type</li> <li>Mirrorless</li></ul>
+            <ul><li>Effective Pixels</li> <li>24.1 MP </li></ul>
+            <ul><li>Tripod Socket</li> <li>Yes </li></ul>
+            <ul><li>Wifi</li> <li>yes </li></ul>
+            <ul><li>Senssor type</li> <li>CMOS </li></ul>
+        </div>
+    </div>
+    <div class="pro_but">
+        <button class="butt">Buy Now</button>
+        <button class="butt">add to cart</button>
+    </div>
+    <script src="Homepage.js"></script>
+{% endblock %}

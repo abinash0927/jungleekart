@@ -3,16 +3,18 @@ from django.http import JsonResponse,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist,FieldError
 from django.db.models import Q
+from operator import or_
+from functools import reduce
 from django.contrib import messages
-from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger,InvalidPage
 from . import models
 import random,time,json
 
 def home(request):
     products = models.Product.objects.all()
-    category = models.Product_Category.objects.all()
+    category = models.Product_Category.objects.filter(id__range=[1,5])
     carousel = products.filter(id__range=(1,4))
     selling = products.filter(rating__range=(4,5)).order_by("-rating")
     contents = {
@@ -21,70 +23,74 @@ def home(request):
         "selling":selling,
     }
     return render(request,"homepage.html",context=contents)
-
-def productpage(request):
+def productspage(request):
 
     products = models.Product.objects.all()
     product_page = products
     category = models.Product_Category.objects.all()
     brand = models.Brand.objects.all()
     pro = ""
-    page = Paginator(product_page,10)
     pag_num = 1
-
     try:
-        if "search" in request.GET:
-            seacrh = request.GET['search']
-            try:
-                product_page = product_page.filter( Q(name__startswith=seacrh) | Q(category_id=category.get(category_name__startswith = seacrh).id))
-            except ObjectDoesNotExist:
-                return HttpResponse("<h1> Product, Not Found</h1>")
+        seacrh = request.GET.get('search','')
+        sort = request.GET.get('sort','newest')
+        cate = request.GET.get('category')
+        bran = request.GET.get('brand')
+        if seacrh:
+            product_page = product_page.filter(Q(name__icontains = seacrh)|Q(category_id__category_name__icontains = seacrh)|Q(brand__brand_name__icontains = seacrh))
+            # page = Paginator(product_page,1)
+
+        if cate:
+            cate_id = category.get(category_name = cate)
+            product_page = product_page.filter(category_id = cate_id.id)
+
+        if bran:
+            brand_id = brand.get(brand_name = bran)
+            product_page = product_page.filter(brand = brand_id.id)
+
+        order = {'Price Low to High':'price','Price High to Low':'-price','Rating':'rating','A-Z':'name','Z-A':'-name','newest':'-created_at','oldest':'created_at'}
+        if sort:
             
-            page = Paginator(product_page,10)
-        if "sort-by" in request.GET:
-            pro = request.GET['sort-by']
-            print(product_page)
-            product_page = product_page.order_by(pro)
-            page = Paginator(product_page,10)
-            print(request.GET['sort-by'])
-
-            if "filter-by" in request.GET:
-                pro = request.GET['filter-by']
-                cate_id = category.get(category_name = pro)
-                product_page = product_page.filter(category_id = cate_id.id)
-                page = Paginator(product_page,10)
-
-        if "filter-by" in request.GET:
-                pro = request.GET['filter-by']
-                print(pro)
-                cate_id = category.get(category_name = pro)
-                product_page = product_page.filter(category_id = cate_id.id)
-                page = Paginator(product_page,10)
-                        
-        if "page" in request.GET:
-            pag_num = request.GET['page']
+            product_page = product_page.order_by(order[f'{sort}'])
+        
+        page = Paginator(product_page,10)
+        pag_num = request.GET.get('page','1')
+        try:
             product_page = page.page(pag_num)
-            
-        else:
-            product_page = page.get_page(pag_num)
+        except PageNotAnInteger:
+            product_page = page.get_page(1)
+            return render(request,"products.html",context={"products": product_page})
+
+        except EmptyPage:
+            return HttpResponse("<h1> Product, Not Found</h1>")
+
+
     except EmptyPage:
-        product_page = page.page(page.num_pages)
-        return HttpResponse("<h1> Sorry, Not Found</h1>")
+        # product_page = page.page(page.num_pages)
+        return HttpResponse("<h1> Page, Not Found</h1>")
     except PageNotAnInteger:
         product_page = page.page(1)
     except ObjectDoesNotExist:
         return HttpResponse("<h1> Sorry, Not Found</h1>")
-
     pag = page.get_elided_page_range(number=pag_num,on_each_side = 1,on_ends = 2)
     contents = {
     "products": product_page,
     "categories": category,
     "brands": brand,
+    "searches": seacrh,
+    "cate": cate,
+    "bran": bran,
+    "sor": sort,
     "pages": page,
     "pag_num": pag_num,
     "pags": pag,
     }
     return render(request,"products.html",context=contents)
+
+def productpage(request,id):
+    product = models.Product.objects.all()
+    prod = product.get(id = id)
+    return render(request,"product.html",{'prods':prod})
 
 def signuppage(request):
     if request.method == "POST":
@@ -162,6 +168,3 @@ def updatecartpage(request):
     else:
         return JsonResponse({'error': 'Invalid request method'})
     
-# def searrchpage(request):
-
-#     return render(request,"products.html")

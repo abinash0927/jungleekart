@@ -10,25 +10,28 @@
             <div class="sort-by">
                 <h6>Sort-By</h6>
                 <form action="" method="get">
-                    <Label for="price-low"><input class="sort" type="radio"  name="sort-by" value="price" id="price_low" data-sortby="low-to-high" autocomplete=""> Price Low to High</Label>
-                    <Label for="price_high"><input class="sort" type="radio" name="sort-by" value="-price" id="price_high" data-sortby="high-to-low"> Price High to Low</Label>
-                    <Label for="popularity"><input class="sort" type="radio" name="sort-by" value="rating" id="popularity" data-sortby="rating"> Rating</Label>
-                    <Label for="n_first"><input class="sort" type="radio" name="sort-by" value="name" id="n_first" data-sortby="A-to-Z"> A-Z</Label>
-                    <Label for="o_first"><input class="sort" type="radio" name="sort-by" value="-name" id="o_first" data-sortby="Z-to-A"> Z-A</Label>
+                    <!-- <input type="hidden" name="search" value="{{searches}}"> -->
+                    <Label for="price-low"><input class="sort" type="radio"  value="Price Low to High" name="sort" id="price_low" {% if request.GET.sort == "Price Low to High" %}checked{% endif %}> Price Low to High</Label>
+                    <Label for="price_high"><input class="sort" type="radio" name="sort" value="Price High to Low"" id="price_high" {% if request.GET.sort == "Price High to Low" %}checked{% endif %}> Price High to Low</Label>
+                    <Label for="popularity"><input class="sort" type="radio" name="sort" value="Rating" id="popularity" {% if request.GET.sort == "Rating" %}checked{% endif %}> Rating</Label>
+                    <Label for="n_first"><input class="sort" type="radio" name="sort" value="A-Z" id="n_first" {% if request.GET.sort == "A-Z" %}checked{% endif %}> A-Z</Label>
+                    <Label for="o_first"><input class="sort" type="radio" name="sort" value="Z-A" id="o_first" {% if request.GET.sort == "Z-A" %}checked{% endif %}> Z-A</Label>
+                    <Label for="o_first"><input class="sort" type="radio" name="sort" value="newest" id="o_first" {% if request.GET.sort == "newest" %}checked{% endif %}> newest</Label>
+                    <Label for="o_first"><input class="sort" type="radio" name="sort" value="oldest" id="o_first" {% if request.GET.sort == "created_at" %}checked{% endif %}> oldest</Label>
                 <br>
                 <h6>Filters</h6>
                     <Label for="price-low">Category</Label>
-                    <select  name="filter-by" class="dropdown">
+                    <select  name="category" class="dropdown">
                         <option value="" selected="selected" disabled hidden>Choose here</option>
                         {% for category in categories %}
-                        <option id="{{ forloop.counter }}" {% if selected == forloop.counter %} selected = "selected"  {% endif %} >{{category.category_name}}</option>
+                        <option {% if request.GET.category == category.category_name %} selected{% endif %} >{{category.category_name}}</option>
                         {% endfor %}
                     </select>
                     <Label for="brand" >Brand</Label>
-                    <select id="brand" name="filter-by" class="dropdown">
+                    <select id="brand" name="brand" class="dropdown">
                         <option value="" selected disabled hidden>Choose here</option>
                         {% for brand in brands %}
-                        <option>{{brand.brand_name}}</option>
+                        <option {% if request.GET.brand == brand.brand_name %} selected{% endif %}>{{brand.brand_name}}</option>
                         {% endfor %}
                     </select>
                     <!-- <Label for="n_first"><input class="sort" type="checkbox" name="sort-by" id="n_first"  data-sortby="new"> Newest First</Label>
@@ -62,7 +65,8 @@
                 <ul class=" pagination justify-content-center d-flex flex-wrap pagination-sm">
                     {% if products.has_previous %}
                         <li class="page-item my-1">
-                            <a class="page-link" href="{% url 'products' %}?page={{products.previous_page_number}}" name="page">previous</a>
+                            <a class="page-link" href="{% url 'products' %}?{% if searches %}search={{searches}}&{% endif %}{% if cate %}category={{cate}}&{% endif %}{% if bran %}brand={{bran}}&{% endif %}
+                            {% if sor %}sort={{sor}}&{% endif %}page={{products.previous_page_number}}" name="page">&laquo; previous</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled my-1">
@@ -71,21 +75,24 @@
                     {% endif %}
    
                   {% for i in pags|default_if_none:products.paginator.get_elided_page_range %}
-                  <!-- <li class="page-item {% if products.number  == forloop.counter %} active {% else %} inactive {% endif %}"><a class="page-link" href="{% url 'products' %}?page={{forloop.counter}}" name="page">{{forloop.counter}}</a></li> -->
-                  {% if products.number == i %}
-                  <li class=" z-0 active page-item mx-1 my-1 "><a class="page-link" href="{% url 'products' %}?page={{ i }}" name="page">{{ i }}</a>
-                  </li>
-              {% else %}
-                  {% if i == products.paginator.ELLIPSIS %}
-                      <li class="page-item  mx-1 my-1"><span class="page-link">{{ i }}</a></li>
-                  {% else %}
-                      <li class="page-item mx-1 my-1"><a class="page-link" href="{% url 'products' %}?page={{ i }}">{{ i }}</a></li>
-                  {% endif %}
-              {% endif %}
+
+                    {% if products.number == i %}
+                        <li class=" z-0 active page-item mx-1 my-1 "><a class="page-link" href="{% url 'products' %}?{% if searches %}search={{searches}}&{% endif %}{% if cate %}category={{cate}}&{% endif %}{% if bran %}brand={{bran}}&{% endif %}
+                            {% if sor %}sort={{sor}}&{% endif %}page={{ i }}" name="page">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        {% if i == products.paginator.ELLIPSIS %}
+                            <li class="page-item  mx-1 my-1"><span class="page-link">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item mx-1 my-1"><a class="page-link" href="{% url 'products' %}?{% if searches %}search={{searches}}&{% endif %}{% if cate %}category={{cate}}&{% endif %}{% if bran %}brand={{bran}}&{% endif %}
+                                {% if sor %}sort={{sor}}&{% endif %}page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endif %}
                   {% endfor %}
                   {% if products.has_next %}
                         <li class="page-item my-1">
-                            <a class="page-link " href="{% url 'products' %}?page={{products.next_page_number}}" name="page">next</a>
+                            <a class="page-link " href="{% url 'products' %}?{% if searches %}search={{searches}}&{% endif %}{% if cate %}category={{cate}}&{% endif %}{% if bran %}brand={{bran}}&{% endif %}
+                            {% if sor %}sort={{sor}}&{% endif %}page={{products.next_page_number}}" name="page">next</a>
                         </li>
                     {% else %}
                         <li class="page-item my-1 disabled">

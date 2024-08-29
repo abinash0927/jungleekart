@@ -1,3 +1,4 @@
+{% load custom_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -81,10 +82,10 @@ const csrftoken = getCookie('csrftoken');
 
                 {% for product in products %}
                     {% if forloop.first %}
-                        <div class="carousel-item active"><a><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px darkgray;">{{product.name}}<p >{{product.desc}}</p></h2></div></a></div>
+                        <div class="carousel-item active"><a href=" product/{{product.id}}/"><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px darkgray;">{{product.name}}<p >{{product.desc}}</p></h2></div></a></div>
                    
                 {% else %}
-                <div class="carousel-item"><a><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px gray;">{{product.name}}<p>{{product.desc}}</p></h2></div></a></div>
+                <div class="carousel-item"><a href=" product/{{product.id}}/"><img src="{{product.main_image}}" alt="" class="d-block" style="width:100%;height: 300px; object-fit:scale-down;"><div class="carousel-caption d-md-block"><h2 style="text-shadow:2px 2px 4px gray;">{{product.name}}<p>{{product.desc}}</p></h2></div></a></div>
                 {% endif %}
                 {% endfor %}
             </div>
@@ -106,7 +107,7 @@ const csrftoken = getCookie('csrftoken');
                                 Explore new arrivals
                             </h6>
                             <h5>{{category.category_name}}</h5>
-                            <a href="#" class="row-btn">
+                            <a href="products/?sort=newest&category={{category.category_name}}" class="row-btn">
                                 show me all
                             </a>
                         </div>
@@ -128,7 +129,7 @@ const csrftoken = getCookie('csrftoken');
             {% for best in selling %}
             <div class="box">
                 <div class="box-img">
-                    <img src="{{best.main_image}}" class="bx">
+                    <a href=" product/{{best.id}}/"><img src="{{best.main_image}}" class="bx"></a>
                     <p>{{best.name}}</p>
                     <!-- <h6> Brand : {{best.brand}}</h6> -->
                     <div class="inbox">
@@ -136,11 +137,8 @@ const csrftoken = getCookie('csrftoken');
                             <a href="#" class="price">Rs. {{best.price}}</a>
                         </div>
                         <div class="rating">
-                            <a href="#"><i class="fa-solid fa-star"></i></a>
-                            <a href="#"><i class="fa-solid fa-star"></i></a>
-                            <a href="#"><i class="fa-solid fa-star"></i></a>
-                            <a href="#"><i class="fa-solid fa-star"></i></a>
-                            <a href="#"><i class="fa-solid fa-star"></i></a>
+                            {% ratings best.rating %}
+
                         </div>
                     </div>
                 </div>
@@ -150,7 +148,6 @@ const csrftoken = getCookie('csrftoken');
     </section>
     
 {% endblock %}
-
     <footer>
         <div class="container-fluid mt-2 pt-3">
             <ul>
